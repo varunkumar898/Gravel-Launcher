@@ -198,8 +198,8 @@ Gravel has a little special way of how imports work.
 
 Instead of relying on paths, every file defines how it wants to be called:
 `package: name`. Then, for using the library, just do `import "name"`. For making it work, you have two options:
-1. Cargo.grvdep
-Create a file called `Cargo.grvdep` and put, line by line, every path your program needs. Then, execute the main file:
+1. Libs.grvdep
+Create a file called `Libs.grvdep` and put, line by line, every path your program needs. Then, execute the main file:
 ```bash
 gravel run main.grv
 ```
@@ -215,6 +215,38 @@ You can also do it like this:
 ```bash
 gravel run main.grv depen1.grv depen2.grv
 ```
+
+## Custom opeations
+
+Inside a type class, you can define custom operations like this:
+```gravel
+class List: type
+    op #
+        return self.len //This is a placeholder for getting length
+    end
+
+    op {x}
+        return self[x]
+    end
+end
+```
+
+Then, just do:
+```gravel
+List list = new List
+list.append(12) // Placeholder method
+list# => 1
+list{0} => 12
+```
+
+## Null and exception safety
+You can declare a type nullable with `?`.
+
+You can declare a type may be exception with `!`.
+
+So, `int!?` could be an int, a null, or an exception.
+
+Exceptions are thrown at the end of the scope.
 
 ## Compile
 **With your default compiler**
@@ -245,21 +277,13 @@ Right now, this is the current development of every feature:
 |AST      |Working|
 |Parser   |Working|
 |LLVM converter |Working|
-|Variables, types and classes | 1/3 |
+|Variables, types and classes | 2/3 |
 |Functions, namespaces, if, while, for, repeat| Working |
 |Packages, pointers, import and basic packages | 2/3 |
+|Custom operations, null safety, exception safety | Not started |
 
 To propose or vote on small syntax changes, please go to discussions.
 
-## Launcher
-This is the Gravel _launcher_. This launcher goal is to provide basic CLI tools to run your Gravel code.
-
-Use the following pipeline for executing a file.
-
-```powershell
-gravel run main.grv dependencies path space separated.
-```
-(Maybe we will add a file for tracking dependencies, like Cargo.toml but for Gravel)
 
 ## Run the .ll
 To run the resulting `output.ll`, do the following:
@@ -284,7 +308,7 @@ it also runs automatically, but you need to do `pip install llvmlite`.
 
 ## Update
 **Currently available contents**
-- scho('A') / scho(intvar)
+- scho('A') / scho(var)
 - int intvar = 65 / val intvar := 65
 - namespace name ... end / name.getthis
 - val namespace.gettheanother := 65
@@ -297,4 +321,5 @@ it also runs automatically, but you need to do `pip install llvmlite`.
 - == != < > <= >=, etc
 - Import and packages
 - Float type
-- `Cargo.grvdep`
+- `Libs.grvdep`
+- Char type (`i32` under the hood, interoperable with `int`)

@@ -9,6 +9,7 @@
 #include "../include/launcher.h"
 #include "../include/tokens.h"
 #include "../include/tollvm.h"
+#include "../include/borrow_checker.h"
 
 #ifdef _WIN32
     #define POPEN _popen
@@ -112,6 +113,7 @@ int main(int argc, char* argv[]) {
 
     ARGS_CONTEX ctx;
     args_init(&ctx, argc, argv);
+    borrow_checker_init();
 
     if (hasArg(&ctx, "winll")) {
         system(getArg(&ctx, "winll"));
@@ -122,7 +124,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (hasArg(&ctx, "run")) {
-        FILE* cargo = fopen("Cargo.grvdep", "r");
+        FILE* cargo = fopen("Libs.grvdep", "r");
         if (cargo != NULL) {
             char buffer[256];
 
